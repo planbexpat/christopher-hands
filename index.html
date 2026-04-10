@@ -832,6 +832,86 @@
     --vapi-text-color: #2a2520;
   }
 
+  .receive-question {
+    max-width: 560px;
+    margin: 2.5rem auto 0;
+    text-align: center;
+  }
+  .rq-button {
+    display: inline-block;
+    padding: 0.9rem 1.8rem;
+    background: transparent;
+    border: 1px solid rgba(199,107,72,0.4);
+    color: var(--terracotta-deep);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .rq-button:hover {
+    background: rgba(199,107,72,0.08);
+    border-color: var(--terracotta-deep);
+  }
+  .rq-panel {
+    display: none;
+    margin-top: 2rem;
+    padding: 2.5rem 2rem;
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(42,37,32,0.1);
+    animation: fadeUp 0.8s ease-out;
+  }
+  .rq-panel.active { display: block; }
+  .rq-question {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+    line-height: 1.55;
+    color: var(--ink);
+    margin-bottom: 2rem;
+  }
+  .rq-choices {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+  .rq-choice {
+    background: none;
+    border: none;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    padding: 0.4rem 0.2rem;
+    border-bottom: 1px solid rgba(90,79,68,0.3);
+    transition: color 0.25s, border-color 0.25s;
+  }
+  .rq-choice:hover {
+    color: var(--terracotta-deep);
+    border-color: var(--terracotta-deep);
+  }
+  .rq-closing {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--ink-soft);
+    margin-top: 1.5rem;
+    animation: fadeUp 0.6s ease-out;
+  }
+  .rq-close-link {
+    display: inline-block;
+    margin-top: 1.2rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+  }
+  .rq-close-link:hover { border-bottom-color: var(--ink-soft); }
+
   .reflection-disclaimer {
     margin-top: 2.5rem;
     font-family: 'Fraunces', serif;
@@ -1068,6 +1148,60 @@
         chat-placeholder="Type here…"
         consent-required="false"
       ></vapi-widget>
+
+      <div class="receive-question">
+        <button class="rq-button" onclick="rqShowQuestion()">Or — receive a question to sit with</button>
+
+        <div class="rq-panel" id="rq-panel">
+          <div class="rq-question" id="rq-question"></div>
+          <div class="rq-choices" id="rq-choices">
+            <button class="rq-choice" onclick="rqSitWith()">Sit with this</button>
+            <button class="rq-choice" onclick="rqRespond()">Respond to it</button>
+          </div>
+          <div id="rq-closing" style="display:none;">
+            <p class="rq-closing">Good. Let it work on you for a while.</p>
+            <span class="rq-close-link" onclick="rqClose()">close</span>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const rqQuestions = [
+          "Whose voice is loudest in your head right now, and when did it first start speaking?",
+          "Which thought did you have today that felt like it was thinking you, instead of the other way around?",
+          "What feeling have you been calling \"tired\" that actually has another name waiting underneath it?",
+          "What have you been carrying so long that you've forgotten it isn't part of you?",
+          "What is your body saying right now that your mind has been refusing to hear?",
+          "Where in your body do you go quiet when you're about to tell the truth, and where do you go loud?",
+          "What part of you has gone quiet that you used to trust?",
+          "When was the last time you felt more alive than you could explain, and what did you do with the feeling afterward?",
+          "Who in your life restores you, and who in your life costs you — and which of the two have you been choosing more of lately?",
+          "What would you stop doing tomorrow morning if no one else's voice was in the room?"
+        ];
+        function rqShowQuestion() {
+          const panel = document.getElementById('rq-panel');
+          const q = document.getElementById('rq-question');
+          const choices = document.getElementById('rq-choices');
+          const closing = document.getElementById('rq-closing');
+          q.textContent = rqQuestions[Math.floor(Math.random() * rqQuestions.length)];
+          choices.style.display = 'flex';
+          closing.style.display = 'none';
+          panel.classList.add('active');
+          panel.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+        function rqSitWith() {
+          document.getElementById('rq-choices').style.display = 'none';
+          document.getElementById('rq-closing').style.display = 'block';
+        }
+        function rqRespond() {
+          const q = document.getElementById('rq-question').textContent;
+          const widget = document.querySelector('vapi-widget');
+          if (widget) widget.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+        }
+        function rqClose() {
+          document.getElementById('rq-panel').classList.remove('active');
+        }
+      </script>
 
       <p class="reflection-disclaimer">
         This is a reflection, not counsel. If something here stays with you,
