@@ -1191,19 +1191,15 @@
         }
         function rqSitWith() {
           document.getElementById('rq-choices').style.display = 'none';
-          document.getElementById('rq-closing').style.display = 'block';
+          const closing = document.getElementById('rq-closing');
+          closing.innerHTML = '<p class="rq-closing">Good. Let it work on you for a while.</p><span class="rq-close-link" onclick="rqClose()">close</span>';
+          closing.style.display = 'block';
         }
         function rqRespond() {
-          const widget = document.querySelector('vapi-widget');
-          if (!widget) return;
-          // Try reaching the CTA button inside the shadow DOM
-          if (widget.shadowRoot) {
-            const btn = widget.shadowRoot.querySelector('button');
-            if (btn) { btn.click(); return; }
-          }
-          // Fallback: scroll to the widget area so user can click the corner button
-          widget.scrollIntoView({behavior: 'smooth'});
-          alert('Tap "A reflection" in the corner to respond to the question.');
+          document.getElementById('rq-choices').style.display = 'none';
+          const closing = document.getElementById('rq-closing');
+          closing.innerHTML = '<p class="rq-closing">Tap <em>"A reflection"</em> in the corner to bring this question into the chat.</p><span class="rq-close-link" onclick="rqClose()">close</span>';
+          closing.style.display = 'block';
         }
         function rqClose() {
           document.getElementById('rq-panel').classList.remove('active');
