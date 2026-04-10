@@ -316,19 +316,43 @@
 
   .dim-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 0;
-    border-top: 1px solid rgba(245,239,228,0.18);
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+    perspective: 1200px;
   }
   .dim {
-    padding: 2rem 1.8rem 2.2rem 0;
-    border-bottom: 1px solid rgba(245,239,228,0.18);
-    border-right: 1px solid rgba(245,239,228,0.18);
     position: relative;
-    transition: background .3s;
+    min-height: 280px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
   }
-  .dim:last-child { border-right: none; }
-  .dim:hover { background: rgba(245,239,228,0.04); }
+  .dim.flipped {
+    transform: rotateY(180deg);
+  }
+  .dim-face {
+    position: absolute;
+    inset: 0;
+    padding: 1.8rem 1.6rem;
+    background: rgba(245,239,228,0.06);
+    border: 1px solid rgba(245,239,228,0.22);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .dim:hover .dim-face {
+    background: rgba(245,239,228,0.1);
+    border-color: rgba(245,239,228,0.35);
+  }
+  .dim-face.back {
+    transform: rotateY(180deg);
+    background: rgba(232,184,150,0.08);
+    border-color: rgba(232,184,150,0.35);
+    justify-content: space-between;
+  }
   .dim-number {
     font-family: 'Fraunces', serif;
     font-size: 0.8rem;
@@ -343,14 +367,59 @@
     color: var(--cream);
     margin-bottom: 0.8rem;
   }
-  .dim p {
+  .dim-face.front p {
     font-size: 0.92rem;
     color: rgba(245,239,228,0.75);
     line-height: 1.55;
+    margin-bottom: 0;
+    max-width: none;
+  }
+  .dim-face.back p {
+    font-family: 'Fraunces', serif;
+    font-size: 0.92rem;
+    font-weight: 300;
+    color: rgba(245,239,228,0.92);
+    line-height: 1.6;
+    margin: 0;
+    max-width: none;
+  }
+  .dim-face.back h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-style: italic;
+    color: #e8b896;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 0.8rem;
+  }
+  .dim-flip-hint {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(212,169,140,0.7);
+    margin-top: auto;
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .dim-flip-hint::after {
+    content: '↻';
+    font-size: 1.1rem;
+    letter-spacing: 0;
+  }
+  .dim-face.back .dim-flip-hint {
+    color: rgba(232,184,150,0.7);
   }
 
   @media (max-width: 900px) {
-    .dim { border-right: none; padding: 1.8rem 0; }
+    .dim-grid { grid-template-columns: 1fr 1fr; }
+    .dim { min-height: 260px; }
+  }
+  @media (max-width: 560px) {
+    .dim-grid { grid-template-columns: 1fr; }
+    .dim { min-height: 240px; }
   }
 
   /* ─── SERVICES (two tracks) ─── */
@@ -891,30 +960,84 @@
       <p class="intro">The work moves across all 5 dimensions. Some clients have one door in mind and discover other possibilities once they commit to change.</p>
 
       <div class="dim-grid">
-        <div class="dim">
-          <div class="dim-number">i.</div>
-          <h3>Mind</h3>
-          <p>Self-talk, performance thinking, fantasy, compulsive patterns.</p>
+        <div class="dim" onclick="this.classList.toggle('flipped')">
+          <div class="dim-face front">
+            <div class="dim-number">i.</div>
+            <h3>Mind</h3>
+            <p>Self-talk, performance thinking, fantasy, compulsive patterns.</p>
+            <div class="dim-flip-hint">tap to turn</div>
+          </div>
+          <div class="dim-face back">
+            <div>
+              <h4>On the mind.</h4>
+              <p>Most coaching treats the mind as the thing to fix — quiet the self-talk, reframe the thoughts. My work treats the mind as one voice in a room that has several. The self-talk isn't the enemy. It's information about whose voice is running the meeting right now.</p>
+            </div>
+            <div class="dim-flip-hint">tap to turn back</div>
+          </div>
         </div>
-        <div class="dim">
-          <div class="dim-number">ii.</div>
-          <h3>Emotions</h3>
-          <p>Feelings from the past, body image, suppression, the capacity for intimacy.</p>
+
+        <div class="dim" onclick="this.classList.toggle('flipped')">
+          <div class="dim-face front">
+            <div class="dim-number">ii.</div>
+            <h3>Emotions</h3>
+            <p>Feelings from the past, body image, suppression, the capacity for intimacy.</p>
+            <div class="dim-flip-hint">tap to turn</div>
+          </div>
+          <div class="dim-face back">
+            <div>
+              <h4>On emotions.</h4>
+              <p>Emotions aren't problems to manage. They're the body's translation of experiences the words haven't caught up to yet. We were taught to rank them — good ones, bad ones, ones we're allowed to have. The practice is learning to listen before deciding what to do with what you're feeling.</p>
+            </div>
+            <div class="dim-flip-hint">tap to turn back</div>
+          </div>
         </div>
-        <div class="dim">
-          <div class="dim-number">iii.</div>
-          <h3>Body</h3>
-          <p>Your sexual pattern, architecture, function — being a successful lover.</p>
+
+        <div class="dim" onclick="this.classList.toggle('flipped')">
+          <div class="dim-face front">
+            <div class="dim-number">iii.</div>
+            <h3>Body</h3>
+            <p>Your sexual pattern, architecture, function — being a successful lover.</p>
+            <div class="dim-flip-hint">tap to turn</div>
+          </div>
+          <div class="dim-face back">
+            <div>
+              <h4>On the body.</h4>
+              <p>Most coaching treats the body as something to manage — fix the sleep, fix the stress. My work treats it as something to listen to. When you can't sleep, the question isn't how do I sleep better. It's what is the sleeplessness trying to say. The body often notices what the mind refuses to.</p>
+            </div>
+            <div class="dim-flip-hint">tap to turn back</div>
+          </div>
         </div>
-        <div class="dim">
-          <div class="dim-number">iv.</div>
-          <h3>Spirit</h3>
-          <p>Peak experiences, sacred sexuality, the inner self, the transcendent.</p>
+
+        <div class="dim" onclick="this.classList.toggle('flipped')">
+          <div class="dim-face front">
+            <div class="dim-number">iv.</div>
+            <h3>Spirit</h3>
+            <p>Peak experiences, sacred sexuality, the inner self, the transcendent.</p>
+            <div class="dim-flip-hint">tap to turn</div>
+          </div>
+          <div class="dim-face back">
+            <div>
+              <h4>On spirit.</h4>
+              <p>Spirit in this work doesn't mean religion, and it doesn't require belief. It's the part of you that asks why when your life is outwardly fine but inwardly hollow. The peak experiences you can't explain. Sacred sexuality lives here. So does grief. So does the quiet you sometimes need without knowing why.</p>
+            </div>
+            <div class="dim-flip-hint">tap to turn back</div>
+          </div>
         </div>
-        <div class="dim">
-          <div class="dim-number">v.</div>
-          <h3>Energy</h3>
-          <p>The build-up, containment, and expression — often overlooked.</p>
+
+        <div class="dim" onclick="this.classList.toggle('flipped')">
+          <div class="dim-face front">
+            <div class="dim-number">v.</div>
+            <h3>Energy</h3>
+            <p>The build-up, containment, and expression — often overlooked.</p>
+            <div class="dim-flip-hint">tap to turn</div>
+          </div>
+          <div class="dim-face back">
+            <div>
+              <h4>On energy.</h4>
+              <p>The one most people skip, because no one taught them to notice it. Energy is how much of you is actually here right now, versus how much is spent rehearsing yesterday or defending against tomorrow. You can't think your way into more of it. You can only learn where yours goes.</p>
+            </div>
+            <div class="dim-flip-hint">tap to turn back</div>
+          </div>
         </div>
       </div>
     </div>
