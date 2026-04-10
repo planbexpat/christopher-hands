@@ -1194,9 +1194,16 @@
           document.getElementById('rq-closing').style.display = 'block';
         }
         function rqRespond() {
-          const q = document.getElementById('rq-question').textContent;
           const widget = document.querySelector('vapi-widget');
-          if (widget) widget.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+          if (!widget) return;
+          // Try reaching the CTA button inside the shadow DOM
+          if (widget.shadowRoot) {
+            const btn = widget.shadowRoot.querySelector('button');
+            if (btn) { btn.click(); return; }
+          }
+          // Fallback: scroll to the widget area so user can click the corner button
+          widget.scrollIntoView({behavior: 'smooth'});
+          alert('Tap "A reflection" in the corner to respond to the question.');
         }
         function rqClose() {
           document.getElementById('rq-panel').classList.remove('active');
